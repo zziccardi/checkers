@@ -11,10 +11,12 @@ class Checkerboard(Frame):
 
         self.master.title("Checkerboard")
         self.grid()
-        self.__redChecker = PhotoImage(file = "redChecker.gif")
-        self.__whiteChecker = PhotoImage(file = "whiteChecker.gif")
-        self.__whiteBlank = PhotoImage(file = "whiteBlank.gif")
-        self.__blackBlank = PhotoImage(file = "blackBlank.gif")
+        self.__redChecker       = PhotoImage(file = "redChecker.gif")
+        self.__whiteChecker     = PhotoImage(file = "whiteChecker.gif")
+        self.__redCheckerKing   = PhotoImage(file = "redCheckerKing.gif")
+        self.__whiteCheckerKing = PhotoImage(file = "whiteCheckerKing.gif")
+        self.__whiteBlank       = PhotoImage(file = "whiteBlank.gif")
+        self.__blackBlank       = PhotoImage(file = "blackBlank.gif")
 
         spaceContents = checkersEvaluation.getSpaces()
 
