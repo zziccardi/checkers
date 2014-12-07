@@ -68,5 +68,5 @@ class Checkerboard(Frame):
             self.__button.grid(row=r, column=c)
             
     def __activated(self, space):
-        checkersEvaluation.spaceClicked(space)
+        checkersEvaluation.spaceClicked(self, space)
         print(space)

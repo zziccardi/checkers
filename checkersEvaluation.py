@@ -42,14 +42,15 @@ def checkSpace(space):
 #Narrative: 
 #Precondition: 
 #Postcondition: 
-def moveChecker(checker, space):
+def moveChecker(frame, checker, space):
     del spaceContents[checker.getSpace()]
 
     if space:
         spaceContents[space] = checker
 
-    Checkerboard.Checkerboard().mainloop()
     #redraw the board
+    frame.destroy()
+    Checkerboard.Checkerboard().mainloop()
 
 def buttonCreated(button):
     spaceContents[button.getSpace()] = button
@@ -61,7 +62,7 @@ def getSpaces():
 #           to determine whether the attempted move is valid or not
 #Precondition: Takes in val, which is a tuple value of 2 integers, (row, col)
 #Postcondition: Makes the move if it is valid, invalid move message if not
-def spaceClicked(val):
+def spaceClicked(frame, val):
     global curChecker
 
     # If a checker is not currently selected by the player:
@@ -99,7 +100,7 @@ def spaceClicked(val):
                     if abs(r - cur_r) == abs(c - cur_c):
                         #valid move
                         if abs(r - cur_r) == 1:
-                            moveChecker(curChecker, val)
+                            moveChecker(frame, curChecker, val)
                             #make the move
 
                         else:
@@ -111,8 +112,8 @@ def spaceClicked(val):
                             elif jumped.getTeam() == turn:
                                 invalidMoveMessage()
                             else:
-                                moveChecker(jumped, 0)
-                                moveChecker(curChecker, val)
+                                moveChecker(frame, jumped, 0)
+                                moveChecker(frame, curChecker, val)
 
                     else:
                         invalidMoveMessage()
