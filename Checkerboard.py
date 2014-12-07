@@ -1,6 +1,6 @@
-#Ziccardi, Donohue, Kasliwal, Suesser
-#CS110 A53
-#Project: Checkerboard
+# Ziccardi, Zachary; Donohue, Mark; Kasliwal, Mannan; and Suesser, Marc
+# CS110 A52, A53, A53, and A53
+# Project: Checkerboard
 
 from tkinter import *
 import checkersEvaluation
@@ -56,16 +56,16 @@ class Checkerboard(Frame):
                 else:
                     color = "Red"
                     
-            self.__b = Button(self,
-                              height=4,
-                              width=8,
-                              command=lambda widget=space: \
-                              self.__activated(widget),
-                              bg=color,
-                              fg=color,
-                              )
+            self.__button = Button(self,
+                                   height=4,
+                                   width=8,
+                                   command=lambda widget=space: \
+                                   self.__activated(widget),
+                                   bg=color,
+                                   fg=color,
+                                  )
 
-            self.__b.grid(row=r, column=c)
+            self.__button.grid(row=r, column=c)
             
     def __activated(self, space):
         checkersEvaluation.spaceClicked(space)
