@@ -1,6 +1,6 @@
-#Ziccardi, Donohue, Kasliwal, Suesser
-#CS110 A53
-#Project: Checkers
+# Ziccardi, Zachary; Donohue, Mark; Kasliwal, Mannan; and Suesser, Marc
+# CS110 A52, A53, A53, and A53
+# Project: checkersEvaluation
 
 from Checker import *
 import Checkerboard
@@ -77,7 +77,8 @@ def spaceClicked(frame, val):
                 curChecker = spaceContent
                 print("curChecker assigned.")
 
-                #make curChecker light up, either change image or highlight button
+                # Make curChecker light up, either change image or highlight
+                # button
     elif curChecker == checkSpace(val):
         curChecker = 0
     else:
