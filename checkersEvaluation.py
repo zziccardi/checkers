@@ -76,8 +76,11 @@ def spaceClicked(frame, val):
 
                 # Make curChecker light up, either change image or highlight
                 # button
+
+    # If a checker has been selected, but a move hasn't yet been made.
     elif curChecker == checkSpace(frame, val):
         frame.setCurChecker(0)
+        print("The previously selected checker is now deselected.")
     else:
         r = val[0]
         c = val[1]
