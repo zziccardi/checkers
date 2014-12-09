@@ -28,6 +28,8 @@ def main():
 
     createCheckers(board)
 
-    board.mainloop()
+    spaceContents = board.getSpaceContents()
+    board.destroy()
+    Checkerboard.Checkerboard(1, 0, spaceContents).mainloop()
 
 main()
