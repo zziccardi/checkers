@@ -4,7 +4,7 @@
 
 import Checkerboard, Checker, checkersEvaluation
 
-def createCheckers():
+def createCheckers(frame):
     listRows = [1, 2, 3, 6, 7, 8]
 
     # Creating 24 checkers
@@ -20,12 +20,14 @@ def createCheckers():
 
         # Creates the checker with the calculate space value, team 1 for the
         # first 12 checkers and team 2 for the final 12
-        checkersEvaluation.buttonCreated(Checker.Checker(False, \
+        checkersEvaluation.buttonCreated(frame, Checker.Checker(False, \
                                                          space, (i // 12) + 1))
 
 def main():
-    createCheckers()
+    board = Checkerboard.Checkerboard(1, 0, {})
 
-    Checkerboard.Checkerboard().mainloop()
+    createCheckers(board)
+
+    board.mainloop()
 
 main()

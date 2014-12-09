@@ -5,89 +5,86 @@
 from Checker import *
 import Checkerboard
 
-#Team 1 can move south
-#Team 2 can move north
-turn = 1
-
-#Will hold the contents of each space by using the space as a key, with data
-#type being a tuple of integer, corresponding to (row, column). Value of each
-#key will contain a reference to the checker occupying the space if it exists
-spaceContents = {}
-
-#Reference to the checker currently chosen by the player whose turn it
-#currently is, 0 if no checker is currently chosen
-curChecker = 0
-
-def invalidMoveMessage():
-    print("Can't make that move!")
+#this function is for debugging only
+def invalidMoveMessage(num):
+    print("Error:", num)
     #replace with message box eventually
 
 #Narrative: Changes the turn 
 #Precondition: Global variable turn is required
 #Postcondition: Toggles turn variable between 1 and 2, resets current checker
-def nextTurn():
-    if turn == 1:
-        turn = 2
-    else:
-        turn = 1
+def nextTurn(frame):
+    print('next turn')
 
-    curChecker = 0
+    if frame.getTurn() == 1:
+        frame.setTurn(2)
+    else:
+        frame.setTurn(1)
+
+    frame.setCurChecker(0)
 
 #Narrative: Returns the contents of a given space
 #Precondition: Takes argument to check dictionary, preferably a tuple of 2 ints
 #Postcondition: Returns the contents of dictionary at given key, 0 if DNE
-def checkSpace(space):
-    return spaceContents.get(space, 0)
+def checkSpace(frame, space):
+    return frame.getSpaceContents().get(space, 0)
 
 #Narrative: 
 #Precondition: 
 #Postcondition: 
 def moveChecker(frame, checker, space):
+    spaceContents = frame.getSpaceContents()
+    
     del spaceContents[checker.getSpace()]
 
     if space:
         spaceContents[space] = checker
 
+    nextTurn(frame)
+    
     #redraw the board
+    turn = frame.getTurn()
+    curChecker = frame.getCurChecker()
     frame.destroy()
-    Checkerboard.Checkerboard().mainloop()
+    Checkerboard.Checkerboard(turn, curChecker, spaceContents).mainloop()
 
-def buttonCreated(button):
+def buttonCreated(frame, button):
+    spaceContents = frame.getSpaceContents()
+
     spaceContents[button.getSpace()] = button
-
-def getSpaces():
-    return spaceContents
+    
+    frame.setSpaceContents(spaceContents)
 
 #Narrative: Called whenever a space is clicked, does all evaluations necessary
 #           to determine whether the attempted move is valid or not
 #Precondition: Takes in val, which is a tuple value of 2 integers, (row, col)
 #Postcondition: Makes the move if it is valid, invalid move message if not
 def spaceClicked(frame, val):
-    global curChecker
+    curChecker = frame.getCurChecker()
+    turn = frame.getTurn()
 
     # If a checker is not currently selected by the player:
     if not curChecker:
-        spaceContent = checkSpace(val)
+        spaceContent = checkSpace(frame, val)
         
         if spaceContent:
-
             # If the checker on the clicked space is the same team as the player
             # whose turn it is, assign it to the player
             if spaceContent.getTeam() == turn:
-                curChecker = spaceContent
+                frame.setCurChecker(spaceContent)
                 print("curChecker assigned.")
 
                 # Make curChecker light up, either change image or highlight
                 # button
-    elif curChecker == checkSpace(val):
-        curChecker = 0
+    elif curChecker == checkSpace(frame, val):
+        frame.setCurChecker(0)
     else:
         r = val[0]
         c = val[1]
         cur_r = curChecker.getSpace()[0]
         cur_c = curChecker.getSpace()[1]
 
-        if not checkSpace(val):
+        if not checkSpace(frame, val):
             #there is not a checker currently occupying the destination
             
             if not abs(c - cur_c) in [3, 5, 7]:
@@ -102,25 +99,24 @@ def spaceClicked(frame, val):
                         #valid move
                         if abs(r - cur_r) == 1:
                             moveChecker(frame, curChecker, val)
-                            #make the move
 
                         else:
                             space = ((r + cur_r) / 2, (c + cur_c) / 2)
-                            jumped = checkSpace(space)
+                            jumped = checkSpace(frame, space)
 
                             if not jumped:
-                                invalidMoveMessage()
+                                invalidMoveMessage(1)
                             elif jumped.getTeam() == turn:
-                                invalidMoveMessage()
+                                invalidMoveMessage(2)
                             else:
                                 moveChecker(frame, jumped, 0)
                                 moveChecker(frame, curChecker, val)
 
                     else:
-                        invalidMoveMessage()
+                        invalidMoveMessage(3)
                 else:
-                    invalidMoveMessage()
+                    invalidMoveMessage(4)
             else:
-                invalidMoveMessage()
+                invalidMoveMessage(5)
         else:
-            invalidMoveMessage()
+            invalidMoveMessage(6)
