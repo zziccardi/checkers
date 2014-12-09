@@ -1,8 +1,6 @@
-#test
-
-#Ziccardi, Donohue, Kasliwal, Suesser
-#CS110 A53
-#Project: Checkerboard
+# Ziccardi, Zachary; Donohue, Mark; Kasliwal, Mannan; and Suesser, Marc
+# CS110 A52, A53, A53, and A53
+# Project: Checkerboard
 
 from tkinter import *
 import checkersEvaluation
@@ -17,6 +15,8 @@ class Checkerboard(Frame):
         self.__whiteChecker = PhotoImage(file = "whiteChecker.gif")
         self.__blackBlank = PhotoImage(file = "blackBlank.gif")
         self.__whiteBlank = PhotoImage(file = "whiteBlank.gif")
+        self.__redKing = PhotoImage(file = "redCheckerKing.gif")
+        self.__whiteKing = PhotoImage(file = "whiteCheckerKing.gif")
 
         #Team 1 can move south
         #Team 2 can move north
