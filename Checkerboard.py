@@ -12,15 +12,7 @@ class Checkerboard(Frame):
         Frame.__init__(self)
         self.master.title("Checkerboard")
         self.grid()
-<<<<<<< HEAD
-=======
-
-        self.__redChecker = PhotoImage(file = "redChecker.gif")
-        self.__whiteChecker = PhotoImage(file = "whiteChecker.gif")
-        self.__blackBlank = PhotoImage(file = "blackBlank.gif")
-        self.__whiteBlank = PhotoImage(file = "whiteBlank.gif")
->>>>>>> origin/master
-
+        
         self.__redChecker = PhotoImage(file = "redChecker.gif")
         self.__whiteChecker = PhotoImage(file = "whiteChecker.gif")
         self.__blackBlank = PhotoImage(file = "blackBlank.gif")
@@ -115,8 +107,6 @@ class Checkerboard(Frame):
         
         self.__button.grid(row=r, column=c)
 
-<<<<<<< HEAD
-    
     def getTurn(self):
         return self.__turn
 
@@ -135,8 +125,6 @@ class Checkerboard(Frame):
     def setSpaceContents(self, spaceContents):
         self.__spaceContents = spaceContents
 
-=======
->>>>>>> origin/master
     def __activated(self, space):
         checkersEvaluation.spaceClicked(self, space)
         print(space)
