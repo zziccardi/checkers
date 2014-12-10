@@ -41,17 +41,29 @@ class Checkerboard(Frame):
             if r % 2:
                 if c % 2 and checker:
                     if checker.getTeam() == 1:
-                        self.makeRedChecker(space, r, c) 
+                        if checker.getIsKing():
+                            self.makeRedKing(space, r, c)
+                        else:
+                            self.makeRedChecker(space, r, c) 
                         
                     else:
-                        self.makeWhiteChecker(space, r, c)
+                        if checker.getIsKing():
+                            self.makeWhiteKing(space, r, c)
+                        else:
+                            self.makeWhiteChecker(space, r, c)
                         
                 elif checker:
                     if checker.getTeam() == 1:
-                        self.makeRedChecker(space, r, c)
+                        if checker.getIsKing():
+                            self.makeRedKing(space, r, c)
+                        else:
+                            self.makeRedChecker(space, r, c)
                         
                     else:
-                        self.makeWhiteChecker(space, r, c)
+                        if checker.getIsKing():
+                            self.makeWhiteKing(space, r, c)
+                        else:
+                            self.makeWhiteChecker(space, r, c)
                         
                 elif c % 2:
                     self.makeBlackBlank(space, r, c)
@@ -62,16 +74,28 @@ class Checkerboard(Frame):
             else:
                 if c % 2 and checker:
                     if checker.getTeam() == 1:
-                        self.makeRedChecker(space, r, c)
+                        if checker.getIsKing():
+                            self.makeRedKing(space, r, c)
+                        else:
+                            self.makeRedChecker(space, r, c)
                     else:
-                        self.makeWhiteChecker(space, r, c)
+                        if checker.getIsKing():
+                            self.makeWhiteKing(space, r, c)
+                        else:
+                            self.makeWhiteChecker(space, r, c)
                         
                 elif checker:
                     if checker.getTeam() == 1:
-                        self.makeRedChecker(space, r, c)
+                        if checker.getIsKing():
+                            self.makeRedKing(space, r, c)
+                        else:
+                            self.makeRedChecker(space, r, c)
                         
                     else:
-                        self.makeWhiteChecker(space, r, c)
+                        if checker.getIsKing():
+                            self.makeWhiteKing(space, r, c)
+                        else:
+                            self.makeWhiteChecker(space, r, c)
                         
                 elif c % 2:
                     self.makeWhiteBlank(space, r, c)
@@ -90,6 +114,20 @@ class Checkerboard(Frame):
         self.__button = Button(self, command=lambda widget=space: \
                                self.__activated(widget), \
                                image = self.__whiteChecker)
+        
+        self.__button.grid(row=r, column=c)
+
+    def makeRedKing(self, space, r, c):
+        self.__button = Button(self, command=lambda widget=space: \
+                               self.__activated(widget), \
+                               image = self.__redKing)
+        
+        self.__button.grid(row=r, column=c)
+
+    def makeWhiteKing(self, space, r, c):
+        self.__button = Button(self, command=lambda widget=space: \
+                               self.__activated(widget), \
+                               image = self.__whiteKing)
         
         self.__button.grid(row=r, column=c)
 
