@@ -8,7 +8,6 @@ import Checkerboard
 #this function is for debugging only
 def invalidMoveMessage(num):
     print("Error:", num)
-    #replace with message box eventually
 
 #Narrative: Changes the turn 
 #Precondition: Global variable turn is required
@@ -29,6 +28,14 @@ def nextTurn(frame):
 def checkSpace(frame, space):
     return frame.getSpaceContents().get(space, 0)
 
+def updateBoard(frame):
+    turn = frame.getTurn()
+    curChecker = frame.getCurChecker()
+    spaceContents = frame.getSpaceContents()
+    frame.destroy()
+    
+    Checkerboard.Checkerboard(turn, curChecker, spaceContents).mainloop()
+
 #Narrative: 
 #Precondition: 
 #Postcondition: 
@@ -39,14 +46,13 @@ def moveChecker(frame, checker, space):
 
     if space:
         spaceContents[space] = checker
+        checker.setSpace(space)
 
-    nextTurn(frame)
-    
-    #redraw the board
-    turn = frame.getTurn()
-    curChecker = frame.getCurChecker()
-    frame.destroy()
-    Checkerboard.Checkerboard(turn, curChecker, spaceContents).mainloop()
+        row = space[0]
+        team = checker.getTeam()
+
+        if (row == 8 and team == 1) or (row == 1 and team == 2):
+            checker.setIsKing(True)
 
 def buttonCreated(frame, button):
     spaceContents = frame.getSpaceContents()
@@ -101,7 +107,9 @@ def spaceClicked(frame, val):
                     if abs(r - cur_r) == abs(c - cur_c):
                         #valid move
                         if abs(r - cur_r) == 1:
+                            nextTurn(frame)
                             moveChecker(frame, curChecker, val)
+                            updateBoard(frame)
 
                         else:
                             space = ((r + cur_r) / 2, (c + cur_c) / 2)
@@ -111,15 +119,28 @@ def spaceClicked(frame, val):
                                 invalidMoveMessage(1)
                             elif jumped.getTeam() == turn:
                                 invalidMoveMessage(2)
+                                print(abs(r - cur_r))
+                                print("r:", r)
+                                print("cur_r:", cur_r)
                             else:
+                                nextTurn(frame)
                                 moveChecker(frame, jumped, 0)
                                 moveChecker(frame, curChecker, val)
+                                updateBoard(frame)
 
                     else:
                         invalidMoveMessage(3)
+                        print("r:", r)
+                        print("cur_r:", cur_r)
                 else:
                     invalidMoveMessage(4)
+                    print("r:", r)
+                    print("cur_r:", cur_r)
             else:
                 invalidMoveMessage(5)
+                print("r:", r)
+                print("cur_r:", cur_r)
         else:
             invalidMoveMessage(6)
+            print("r:", r)
+            print("cur_r:", cur_r)
