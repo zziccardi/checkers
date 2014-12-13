@@ -123,10 +123,38 @@ def spaceClicked(frame, val):
                                 print("r:", r)
                                 print("cur_r:", cur_r)
                             else:
-                                nextTurn(frame)
+                                #nextTurn(frame)
                                 moveChecker(frame, jumped, 0)
                                 moveChecker(frame, curChecker, val)
-                                updateBoard(frame)
+                                new_frame = updateBoard(frame)
+
+                                possibleJump = False
+
+                                #check all four possible jump spaces around
+                                #the checker here, if none are open with an
+                                #opposing checker between, then in the else
+                                #statement, do nextTurn(frame)
+
+                                for i in range(-1, 2, 2):
+                                    for x in range(-1, 2, 2):
+                                        test = (val[0] + 2 * x, val[1] + 2 * i)
+
+                                        if not checkSpace(new_frame, test):
+                                            midpoint = ((val[0] + test[0]) / 2,
+                                                        (val[1] + test[1]) / 2)
+
+                                            occupying_mid = checkSpace \
+                                                          (new_frame, midpoint)
+
+                                            if occupying_mid and \
+                                               not occupying_mid.getTeam() \
+                                               == turn:
+                                                possibleJump = True
+
+                                #still bugs, but above logic works - bang bang
+                                                
+                                if not possibleJump:
+                                    nextTurn(new_frame)
 
                     else:
                         invalidMoveMessage(3)
