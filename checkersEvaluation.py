@@ -143,10 +143,12 @@ def spaceClicked(frame, val):
                                             midpoint = ((val[0] + test[0]) / 2,
                                                         (val[1] + test[1]) / 2)
 
-                                            occupying_mid = checkSpace(new_frame, midpoint)
+                                            occupying_mid = checkSpace \
+                                                          (new_frame, midpoint)
 
                                             if occupying_mid and \
-                                               not occupying_mid.getTeam() == turn:
+                                               not occupying_mid.getTeam() \
+                                               == turn:
                                                 possibleJump = True
 
                                 #still bugs, but above logic works - bang bang

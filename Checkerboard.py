@@ -26,9 +26,10 @@ class Checkerboard(Frame):
         #currently is, 0 if no checker is currently chosen
         self.__curChecker = checker
 
-        #Will hold the contents of each space by using the space as a key, with data
-        #type being a tuple of integer, corresponding to (row, column). Value of each
-        #key will contain a reference to the checker occupying the space if it exists
+        #Will hold the contents of each space by using the space as a key, with
+        #data type being a tuple of integer, corresponding to (row, column).
+        # Value of each key will contain a reference to the checker occupying
+        #the space if it exists
         self.__spaceContents = spaceContents
 
         for i in range(64):
