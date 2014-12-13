@@ -106,28 +106,32 @@ class Checkerboard(Frame):
     def makeRedChecker(self, space, r, c):
         self.__button = Button(self, command=lambda widget=space: \
                                self.__activated(widget), \
-                               image = self.__redChecker)
+                               image = self.__redChecker, \
+                               activebackground = "yellow")
         
         self.__button.grid(row=r, column=c)
 
     def makeWhiteChecker(self, space, r, c):
         self.__button = Button(self, command=lambda widget=space: \
                                self.__activated(widget), \
-                               image = self.__whiteChecker)
+                               image = self.__whiteChecker, \
+                               activebackground = "yellow")
         
         self.__button.grid(row=r, column=c)
 
     def makeRedKing(self, space, r, c):
         self.__button = Button(self, command=lambda widget=space: \
                                self.__activated(widget), \
-                               image = self.__redKing)
+                               image = self.__redKing, \
+                               activebackground = "yellow")
         
         self.__button.grid(row=r, column=c)
 
     def makeWhiteKing(self, space, r, c):
         self.__button = Button(self, command=lambda widget=space: \
                                self.__activated(widget), \
-                               image = self.__whiteKing)
+                               image = self.__whiteKing, \
+                               activebackground = "yellow")
         
         self.__button.grid(row=r, column=c)
 
