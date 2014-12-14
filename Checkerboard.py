@@ -170,8 +170,8 @@ class Checkerboard(Frame):
 
     #Narrative: Changes the turn values and resets curChecherk
     #Precondition: Reference to the checker board must be passed as an argument
-    #Postcondition: Toggles turn attribute on board, resets curChecker and updates
-    #               label to reflect changes
+    #Postcondition: Toggles turn attribute on board, resets curChecker and 
+    #               updates label to reflect changes
     def nextTurn(self):
         if self.__turn == 1:
             self.__turn = 2
@@ -182,8 +182,8 @@ class Checkerboard(Frame):
 
         self.__curChecker = 0
 
-    #Narrative: Sends the space value to evaluations module to evaluate how event
-    #           should be handled within the rules of checkers
+    #Narrative: Sends the space value to evaluations module to evaluate how 
+    #           event should be handled within the rules of checkers
     #Precondition: Button must be pressed on the checkerboard
     #Postcondition: Passes space as argument to find how to proceed
     def __activated(self, space):
@@ -237,4 +237,5 @@ class Checkerboard(Frame):
             c = (i % 8) + 1
             space = (r, c)
 
-            self.__buttons[space].config(image = self.__images[self.__getImageFile(space)])
+            self.__buttons[space].config(image = \
+            self.__images[self.__getImageFile(space)])
