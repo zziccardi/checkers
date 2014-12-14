@@ -131,14 +131,16 @@ def spaceClicked(board, val):
             if not abs(c - cur_c) in [3, 5, 7]:
                 #valid column move
                 
-                if curChecker.getIsKing() or isCorrectDirection(curSpace, val, turn):
+                if curChecker.getIsKing() or isCorrectDirection(curSpace, \
+                                                                val, turn):
                     #valid row move
 
                     if abs(r - cur_r) == abs(c - cur_c):
                         #valid move
                         if abs(r - cur_r) == 1:
                             moveChecker(board, curChecker, val)
-                            board.updateAnalysisValue("The checker has advanced one space.")
+                            board.updateAnalysisValue("The checker has " + \
+                                                      "advanced one space.")
                             board.nextTurn()
                             board.updateBoard()
 
@@ -168,24 +170,32 @@ def spaceClicked(board, val):
                                         for x in range(-1, 2, 2):
                                             test = (r + 2 * x, c + 2 * i)
                                             
-                                            if checkSpace(board, test) == 0 and isValidSpace(test) and \
-                                            (curChecker.getIsKing() or isCorrectDirection(val, test, turn)):
-                                                midpoint = (int((r + test[0]) / 2),
-                                                            int((c + test[1]) / 2))
+                                            if checkSpace(board, test) == 0 and \
+                                               isValidSpace(test) and \
+                                            (curChecker.getIsKing() or \
+                                             isCorrectDirection(val, test, \
+                                                                turn)):
+                                                midpoint = (int((r + test[0]) \
+                                                                / 2),
+                                                            int((c + test[1]) \
+                                                                / 2))
 
-                                                occupying_mid = checkSpace(board, midpoint)
+                                                occupying_mid = checkSpace\
+                                                                (board, \
+                                                                 midpoint)
 
                                                 if occupying_mid and \
-                                                   not occupying_mid.getTeam() == turn:
+                                                   not occupying_mid.getTeam() \
+                                                   == turn:
                                                     possibleJump = True
-
-                                    #still bugs, but above logic works - bang bang
                                                     
                                     if not possibleJump:
                                         board.updateAnalysisValue("Nice!")
                                         board.nextTurn()
                                     else:
-                                        board.updateAnalysisValue("A double jump is available!")
+                                        board.updateAnalysisValue("A double" +
+                                                                  " jump is" +
+                                                                  " available!")
 
                                     board.updateBoard()
 
