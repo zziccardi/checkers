@@ -17,7 +17,7 @@ class Checkerboard(Frame):
 
         # New Frame for Names
         self.__nameFrame = Frame(self)
-        self.__nameFrame.grid(column = 9, row = 2, padx = 20)
+        self.__nameFrame.grid(column = 9, row = 2, padx = 30)
 
         # New Frame for Turn
         self.__turnFrame = Frame(self)
@@ -32,27 +32,20 @@ class Checkerboard(Frame):
         self.__redPlayerLabel = Label(self.__nameFrame, \
                                       text = "Red Team Player Name:")
         self.__redNameEntry = Entry(self.__nameFrame, \
-                                    width = 10)
-        self.__redNameEntry.insert(0, redName)
+                                    width = 15)
+        self.__redNameEntry.insert(0, "Red Player")
         
         self.__whitePlayerLabel = Label(self.__nameFrame, \
                                         text = "White Team Player Name:")
         self.__whiteNameEntry = Entry(self.__nameFrame, \
-                                      width = 10)
-        self.__whiteNameEntry.insert(0, whiteName)
+                                      width = 15)
+        self.__whiteNameEntry.insert(0, "White Player")
 
-        # Updating label that displays who's turn it is
         self.__turnLabel = Label(self.__turnFrame, \
                                  text = "Your Turn:")
-        '''Code to make the turn label change with each move'''
-#        self.__turnValue = StringVar()
-        if turn == 1:
-            teamName = redName
-        else:
-            teamName = whiteName
-            
+        
         self.__displayTurn = Label(self.__turnFrame, \
-                                   text = teamName)
+                                   text = self.__redNameEntry.get())
         
 
         # Updating label that tells user if their move was valid or invalid
@@ -61,7 +54,8 @@ class Checkerboard(Frame):
         '''Code to make the move analysis label change with each move'''
         self.__analysisValue = StringVar()
         self.__displayAnalysis = Label(self.__turnFrame, \
-                                       textvariable = self.__analysisValue)
+                                       textvariable = self.__analysisValue, \
+                                       justify = LEFT)
 
         # Organize titleFrame
         self.__startGameLabel.grid(   column = 0, row = 0)
@@ -77,13 +71,24 @@ class Checkerboard(Frame):
         self.__displayTurn.grid(      column = 1, row = 0)
         self.__moveAnalysisLabel.grid(column = 0, row = 1)
         self.__displayAnalysis.grid(  column = 1, row = 1)
-        
-        self.__redChecker = PhotoImage(file = "redChecker.gif")
-        self.__whiteChecker = PhotoImage(file = "whiteChecker.gif")
-        self.__blackBlank = PhotoImage(file = "blackBlank.gif")
-        self.__whiteBlank = PhotoImage(file = "whiteBlank.gif")
-        self.__redKing = PhotoImage(file = "redCheckerKing.gif")
-        self.__whiteKing = PhotoImage(file = "whiteCheckerKing.gif")
+
+        self.__images = {}
+        self.__images["red"] = PhotoImage(file = "redChecker.gif")
+        self.__images["redKing"] = PhotoImage(file = "redCheckerKing.gif")
+        self.__images["redHighlighted"] = \
+                            PhotoImage(file = "redCheckerHighlighted.gif")
+        self.__images["redKingHighlighted"] = \
+                            PhotoImage(file = "redCheckerKingHighlighted.gif")
+        self.__images["white"] = PhotoImage(file = "whiteChecker.gif")
+        self.__images["whiteKing"] = PhotoImage(file = "whiteCheckerKing.gif")
+        self.__images["whiteHighlighted"] = \
+                            PhotoImage(file = "whiteCheckerHighlighted.gif") 
+        self.__images["whiteKingHighlighted"] = \
+                            PhotoImage(file = "whiteCheckerKingHighlighted.gif")
+        self.__images["blackBlank"] = PhotoImage(file = "blackBlank.gif")
+        self.__images["whiteBlank"] = PhotoImage(file = "whiteBlank.gif")
+
+        self.__buttons = {}
 
         #Team 1 can move south
         #Team 2 can move north
@@ -104,118 +109,13 @@ class Checkerboard(Frame):
             c = (i % 8) + 1
             space = (r, c)
 
-            checker = spaceContents.get(space, 0)
+            photoFile = self.__getImageFile(space)
 
-            if r % 2:
-                if c % 2 and checker:
-                    if checker.getTeam() == 1:
-                        if checker.getIsKing():
-                            self.makeRedKing(space, r, c)
-                        else:
-                            self.makeRedChecker(space, r, c) 
-                        
-                    else:
-                        if checker.getIsKing():
-                            self.makeWhiteKing(space, r, c)
-                        else:
-                            self.makeWhiteChecker(space, r, c)
-                        
-                elif checker:
-                    if checker.getTeam() == 1:
-                        if checker.getIsKing():
-                            self.makeRedKing(space, r, c)
-                        else:
-                            self.makeRedChecker(space, r, c)
-                        
-                    else:
-                        if checker.getIsKing():
-                            self.makeWhiteKing(space, r, c)
-                        else:
-                            self.makeWhiteChecker(space, r, c)
-                        
-                elif c % 2:
-                    self.makeBlackBlank(space, r, c)
-                    
-                else:
-                    self.makeWhiteBlank(space, r, c)
-                    
-            else:
-                if c % 2 and checker:
-                    if checker.getTeam() == 1:
-                        if checker.getIsKing():
-                            self.makeRedKing(space, r, c)
-                        else:
-                            self.makeRedChecker(space, r, c)
-                    else:
-                        if checker.getIsKing():
-                            self.makeWhiteKing(space, r, c)
-                        else:
-                            self.makeWhiteChecker(space, r, c)
-                        
-                elif checker:
-                    if checker.getTeam() == 1:
-                        if checker.getIsKing():
-                            self.makeRedKing(space, r, c)
-                        else:
-                            self.makeRedChecker(space, r, c)
-                        
-                    else:
-                        if checker.getIsKing():
-                            self.makeWhiteKing(space, r, c)
-                        else:
-                            self.makeWhiteChecker(space, r, c)
-                        
-                elif c % 2:
-                    self.makeWhiteBlank(space, r, c)
-               
-                else:
-                    self.makeBlackBlank(space, r, c)
-
-    def makeRedChecker(self, space, r, c):
-        self.__button = Button(self, command=lambda widget=space: \
-                               self.__activated(widget), \
-                               image = self.__redChecker, \
-                               activebackground = "yellow")
+            self.__buttons[space] = Button(self, command=lambda widget=space: \
+                                   self.__activated(widget), \
+                                   image = self.__images[photoFile])
         
-        self.__button.grid(row=r, column=c)
-
-    def makeWhiteChecker(self, space, r, c):
-        self.__button = Button(self, command=lambda widget=space: \
-                               self.__activated(widget), \
-                               image = self.__whiteChecker, \
-                               activebackground = "yellow")
-        
-        self.__button.grid(row=r, column=c)
-
-    def makeRedKing(self, space, r, c):
-        self.__button = Button(self, command=lambda widget=space: \
-                               self.__activated(widget), \
-                               image = self.__redKing, \
-                               activebackground = "yellow")
-        
-        self.__button.grid(row=r, column=c)
-
-    def makeWhiteKing(self, space, r, c):
-        self.__button = Button(self, command=lambda widget=space: \
-                               self.__activated(widget), \
-                               image = self.__whiteKing, \
-                               activebackground = "yellow")
-        
-        self.__button.grid(row=r, column=c)
-
-    def makeBlackBlank(self, space, r, c):
-        self.__button = Button(self, command=lambda widget=space: \
-                               self.__activated(widget), \
-                               image = self.__blackBlank)
-        
-        self.__button.grid(row=r, column=c)
-
-    def makeWhiteBlank(self, space, r, c):
-        self.__button = Button(self, command=lambda widget=space: \
-                               self.__activated(widget), \
-                               image = self.__whiteBlank)
-        
-        self.__button.grid(row=r, column=c)
+            self.__buttons[space].grid(row=r, column=c)
 
     def getTurn(self):
         return self.__turn
@@ -235,24 +135,55 @@ class Checkerboard(Frame):
     def setSpaceContents(self, spaceContents):
         self.__spaceContents = spaceContents
 
-    def retrieveRedName(self):
-        return self.__redNameEntry.get()
+    def updateTurnValue(self):
+        if self.__turn == 1:
+            self.__turnLabel = self.__redNameEntry.get()
+        else:
+            self.__turnLabel = self.__whiteNameEntry.get()
 
-    def retrieveWhiteName(self):
-        return self.__whiteNameEntry.get()
+    def updateAnalysisValue(self, message):
+        self.__analysisValue.set(message)
 
     def __activated(self, space):
         checkersEvaluation.spaceClicked(self, space)
         print(space)
+        
+    def __getImageFile(self, space):
+        r = space[0]
+        c = space[1]
+        checker = self.__spaceContents.get(space, 0)
 
-##    def updateTurnValue(self):
-##        self.__redName = self.__redNameEntry.get()
-##        self.__whiteName = self.__whiteNameEntry.get()
-##        
-##        if self.__turn == 1:
-##            self.__turnValue.set(self.__redName)
-##        else:
-##            self.__turnValue.set(self.__whiteName)
+        photoFile = ""
 
-    def updateAnalysisValue(self, message):
-        self.__analysisValue.set(message)
+        if checker:
+            if checker.getTeam() == 1:
+                photoFile += "red"
+            else:
+                photoFile += "white"
+
+            if checker.getIsKing():
+                photoFile += "King"
+
+            if checker == self.__curChecker:
+                photoFile += "Highlighted"
+        else:
+            if r % 2:
+                if c % 2:
+                    photoFile += "blackBlank"
+                else:
+                    photoFile += "whiteBlank"
+            else:
+                if c % 2:
+                    photoFile += "whiteBlank"
+                else:
+                    photoFile += "blackBlank"
+
+        return photoFile
+        
+    def updateBoard(self):
+        for i in range(64):
+            r = (i // 8) + 1
+            c = (i % 8) + 1
+            space = (r, c)
+
+            self.__buttons[space].config(image = self.__images[self.__getImageFile(space)])

@@ -25,11 +25,9 @@ def createCheckers(frame):
 
 def main():
     board = Checkerboard.Checkerboard(1, 0, {})
-
     createCheckers(board)
-
-    spaceContents = board.getSpaceContents()
-    board.destroy()
-    Checkerboard.Checkerboard(1, 0, spaceContents).mainloop()
+    board.updateBoard()
+    board.updateAnalysisValue("Let the game begin!")
+    board.mainloop()
 
 main()

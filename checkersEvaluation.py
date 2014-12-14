@@ -6,23 +6,17 @@ import tkinter.messagebox as tk
 from Checker import *
 import Checkerboard
 
-#this function is for debugging only
-def invalidMoveMessage(num):
-    print("Error:", num)
-
 #Narrative: Changes the turn 
 #Precondition: Global variable turn is required
 #Postcondition: Toggles turn variable between 1 and 2, resets current checker
 def nextTurn(frame):
-    print('next turn')
-
     if frame.getTurn() == 1:
         frame.setTurn(2)
     else:
         frame.setTurn(1)
 
     frame.setCurChecker(0)
-#    frame.updateTurnValue()
+    frame.updateTurnValue()
 
 #Narrative: Returns the contents of a given space
 #Precondition: Takes argument to check dictionary, preferably a tuple of 2 ints
@@ -40,17 +34,6 @@ def isCorrectDirection(current, destination, turn):
     
     return (((rowDifference) >= 0 and (turn == 1)) or \
             ((rowDifference) <= 0 and (turn == 2)))
-    
-def updateBoard(frame):
-    turn = frame.getTurn()
-    curChecker = frame.getCurChecker()
-    spaceContents = frame.getSpaceContents()
-    redName = frame.retrieveRedName()
-    whiteName = frame.retrieveWhiteName()
-    frame.destroy()
-    
-    new_frame = Checkerboard.Checkerboard(turn, curChecker, spaceContents, redName, whiteName)
-    new_frame.mainloop()
 
 def checkWin(frame):
     spaceContents = frame.getSpaceContents()
@@ -125,15 +108,16 @@ def spaceClicked(frame, val):
             # whose turn it is, assign it to the player
             if spaceContent.getTeam() == turn:
                 frame.setCurChecker(spaceContent)
-                print("curChecker assigned.")
-
+                frame.updateAnalysisValue("A checker has been selected.")
+                frame.updateBoard()
                 # Make curChecker light up, either change image or highlight
                 # button
 
     # If a checker has been selected, but a move hasn't yet been made.
     elif curChecker == checkSpace(frame, val):
         frame.setCurChecker(0)
-        print("The previously selected checker is now deselected.")
+        frame.updateAnalysisValue("The checker has been deselected.")
+        frame.updateBoard()
     else:
         curSpace = curChecker.getSpace()
         r = val[0]
@@ -153,18 +137,19 @@ def spaceClicked(frame, val):
                     if abs(r - cur_r) == abs(c - cur_c):
                         #valid move
                         if abs(r - cur_r) == 1:
-                            nextTurn(frame)
                             moveChecker(frame, curChecker, val)
-                            updateBoard(frame)
+                            frame.updateAnalysisValue("The checker has advanced one space.")
+                            nextTurn(frame)
+                            frame.updateBoard()
 
                         else:
                             space = ((r + cur_r) / 2, (c + cur_c) / 2)
                             jumped = checkSpace(frame, space)
 
                             if not jumped:
-                                invalidMoveMessage(1)
+                                frame.updateAnalysisValue("Invalid move!")
                             elif jumped.getTeam() == turn:
-                                invalidMoveMessage(2)
+                                frame.updateAnalysisValue("Invalid move!")
                             else:
                                 #nextTurn(frame)
                                 moveChecker(frame, jumped, 0)
@@ -197,9 +182,12 @@ def spaceClicked(frame, val):
                                     #still bugs, but above logic works - bang bang
                                                     
                                     if not possibleJump:
+                                        frame.updateAnalysisValue("Nice!")
                                         nextTurn(frame)
+                                    else:
+                                        frame.updateAnalysisValue("A double jump is available!")
 
-                                    updateBoard(frame)
+                                    frame.updateBoard()
 
                     else:
                         frame.updateAnalysisValue("Invalid move!")
