@@ -22,6 +22,7 @@ def nextTurn(frame):
         frame.setTurn(1)
 
     frame.setCurChecker(0)
+#    frame.updateTurnValue()
 
 #Narrative: Returns the contents of a given space
 #Precondition: Takes argument to check dictionary, preferably a tuple of 2 ints
@@ -40,14 +41,15 @@ def isCorrectDirection(current, destination, turn):
     return (((rowDifference) >= 0 and (turn == 1)) or \
             ((rowDifference) <= 0 and (turn == 2)))
     
-
 def updateBoard(frame):
     turn = frame.getTurn()
     curChecker = frame.getCurChecker()
     spaceContents = frame.getSpaceContents()
+    redName = frame.retrieveRedName()
+    whiteName = frame.retrieveWhiteName()
     frame.destroy()
     
-    new_frame = Checkerboard.Checkerboard(turn, curChecker, spaceContents)
+    new_frame = Checkerboard.Checkerboard(turn, curChecker, spaceContents, redName, whiteName)
     new_frame.mainloop()
 
 def checkWin(frame):
@@ -78,7 +80,7 @@ def checkWin(frame):
 
 def endGame(frame):
     frame.destroy()
-    tk.showinfo("End Of Game", "The game is over!")
+    tk.showinfo("End of Game", "The game is over!")
 
 #Narrative: 
 #Precondition: 
@@ -163,9 +165,6 @@ def spaceClicked(frame, val):
                                 invalidMoveMessage(1)
                             elif jumped.getTeam() == turn:
                                 invalidMoveMessage(2)
-                                print(abs(r - cur_r))
-                                print("r:", r)
-                                print("cur_r:", cur_r)
                             else:
                                 #nextTurn(frame)
                                 moveChecker(frame, jumped, 0)
@@ -178,13 +177,11 @@ def spaceClicked(frame, val):
                                     #the checker here, if none are open with an
                                     #opposing checker between, then in the else
                                     #statement, do nextTurn(frame)
-
                                     possibleJump = False
 
                                     for i in range(-1, 2, 2):
                                         for x in range(-1, 2, 2):
                                             test = (r + 2 * x, c + 2 * i)
-                                            print("Testing:", test)
                                             
                                             if checkSpace(frame, test) == 0 and isValidSpace(test) and \
                                             (curChecker.getIsKing() or isCorrectDirection(val, test, turn)):
@@ -196,29 +193,19 @@ def spaceClicked(frame, val):
                                                 if occupying_mid and \
                                                    not occupying_mid.getTeam() == turn:
                                                     possibleJump = True
-                                                    print("Midpoint found:", midpoint)
 
                                     #still bugs, but above logic works - bang bang
                                                     
                                     if not possibleJump:
-                                        print("No possible jump")
                                         nextTurn(frame)
 
                                     updateBoard(frame)
 
                     else:
-                        invalidMoveMessage(3)
-                        print("r:", r)
-                        print("cur_r:", cur_r)
+                        frame.updateAnalysisValue("Invalid move!")
                 else:
-                    invalidMoveMessage(4)
-                    print("r:", r)
-                    print("cur_r:", cur_r)
+                    frame.updateAnalysisValue("Invalid move!")
             else:
-                invalidMoveMessage(5)
-                print("r:", r)
-                print("cur_r:", cur_r)
+                frame.updateAnalysisValue("Invalid move!")
         else:
-            invalidMoveMessage(6)
-            print("r:", r)
-            print("cur_r:", cur_r)
+            frame.updateAnalysisValue("Invalid move!")

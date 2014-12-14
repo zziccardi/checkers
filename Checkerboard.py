@@ -6,7 +6,7 @@ from tkinter import *
 import checkersEvaluation
 
 class Checkerboard(Frame):
-    def __init__(self, turn, checker, spaceContents):
+    def __init__(self, turn, checker, spaceContents, redName="", whiteName=""):
         Frame.__init__(self)
         self.master.title("Checkerboard")
         self.grid()
@@ -27,32 +27,32 @@ class Checkerboard(Frame):
         # Label for the 'title' of the menu
         self.__startGameLabel = Label(self.__titleFrame, \
                                       text = "Let's play Checkers!")
-
         # Player name labels, Player name entries,
         # Submit buttons
         self.__redPlayerLabel = Label(self.__nameFrame, \
                                       text = "Red Team Player Name:")
         self.__redNameEntry = Entry(self.__nameFrame, \
                                     width = 10)
-        self.__redOKButton = Button(self.__nameFrame, \
-                                        text = "OK", \
-                                        command = self.__setRedName)                                         
+        self.__redNameEntry.insert(0, redName)
+        
         self.__whitePlayerLabel = Label(self.__nameFrame, \
                                         text = "White Team Player Name:")
         self.__whiteNameEntry = Entry(self.__nameFrame, \
                                       width = 10)
-        self.__whiteOKButton = Button(self.__nameFrame, \
-                                      text = "OK", \
-                                      command = self.__setWhiteName)
-
+        self.__whiteNameEntry.insert(0, whiteName)
 
         # Updating label that displays who's turn it is
         self.__turnLabel = Label(self.__turnFrame, \
                                  text = "Your Turn:")
         '''Code to make the turn label change with each move'''
-        self.__turnValue = StringVar()
+#        self.__turnValue = StringVar()
+        if turn == 1:
+            teamName = redName
+        else:
+            teamName = whiteName
+            
         self.__displayTurn = Label(self.__turnFrame, \
-                                   textvariable = self.__turnValue)
+                                   text = teamName)
         
 
         # Updating label that tells user if their move was valid or invalid
@@ -69,10 +69,8 @@ class Checkerboard(Frame):
         # Organize nameFrame
         self.__redPlayerLabel.grid(   column = 0, row = 1)
         self.__redNameEntry.grid(     column = 1, row = 1)
-        self.__redOKButton.grid(      column = 2, row = 1)
         self.__whitePlayerLabel.grid( column = 0, row = 2)
         self.__whiteNameEntry.grid(   column = 1, row = 2)
-        self.__whiteOKButton.grid(    column = 2, row = 2)
 
         # Organize turnFrame
         self.__turnLabel.grid(        column = 0, row = 0)
@@ -237,24 +235,24 @@ class Checkerboard(Frame):
     def setSpaceContents(self, spaceContents):
         self.__spaceContents = spaceContents
 
+    def retrieveRedName(self):
+        return self.__redNameEntry.get()
+
+    def retrieveWhiteName(self):
+        return self.__whiteNameEntry.get()
+
     def __activated(self, space):
         checkersEvaluation.spaceClicked(self, space)
         print(space)
 
-    def __setRedName(self):
-        redName = self.__redNameEntry.get()
+##    def updateTurnValue(self):
+##        self.__redName = self.__redNameEntry.get()
+##        self.__whiteName = self.__whiteNameEntry.get()
+##        
+##        if self.__turn == 1:
+##            self.__turnValue.set(self.__redName)
+##        else:
+##            self.__turnValue.set(self.__whiteName)
 
-    def __setWhiteName(self):
-        whiteName = self.__whiteNameEntry.get()
-
-    def updateTurnValue(self):
-        if self.__turn == 1:
-            self.__turnValue.set(redName)
-        else:
-            self.__turnValue.set(whiteName)
-
-    def updateAnalysisValue(self):
-#        if checkersEvaluation.invalidMoveMessage():
-        self.__analysisValue.set("Invalid Move!")
-#        else:
-#            self.__analysisValue.set("Nice move, bro")
+    def updateAnalysisValue(self, message):
+        self.__analysisValue.set(message)
