@@ -2,6 +2,7 @@
 # CS110 A52, A53, A53, and A53
 # Project: checkersEvaluation
 
+import tkinter.messagebox as tk
 from Checker import *
 import Checkerboard
 
@@ -28,13 +29,56 @@ def nextTurn(frame):
 def checkSpace(frame, space):
     return frame.getSpaceContents().get(space, 0)
 
+def isValidSpace(space):
+    return space[0] > 0 and space[0] < 9 and space[1] > 0 and space[1] < 9
+
+def isCorrectDirection(current, destination, turn):
+    #team 1 can move south
+    #team 2 can move north
+    rowDifference = destination[0] - current[0]
+    
+    return (((rowDifference) >= 0 and (turn == 1)) or \
+            ((rowDifference) <= 0 and (turn == 2)))
+    
+
 def updateBoard(frame):
     turn = frame.getTurn()
     curChecker = frame.getCurChecker()
     spaceContents = frame.getSpaceContents()
     frame.destroy()
     
-    Checkerboard.Checkerboard(turn, curChecker, spaceContents).mainloop()
+    new_frame = Checkerboard.Checkerboard(turn, curChecker, spaceContents)
+    new_frame.mainloop()
+
+def checkWin(frame):
+    spaceContents = frame.getSpaceContents()
+    
+    ctr = 1
+    row = 1
+    column = 1
+
+    teamOneOccurance = False
+    teamTwoOccurance = False
+
+    while (not (teamOneOccurance and teamTwoOccurance)) and ctr <= 64:
+        space = (row, column)
+        checker = checkSpace(frame, space)
+
+        if checker:
+            if checker.getTeam() == 1:
+                teamOneOccurance = True
+            else:
+                teamTwoOccurance = True
+
+        row = ctr % 8 + 1
+        column = ctr // 8 + 1
+        ctr += 1
+    
+    return teamOneOccurance != teamTwoOccurance
+
+def endGame(frame):
+    frame.destroy()
+    tk.showinfo("End Of Game", "The game is over!")
 
 #Narrative: 
 #Precondition: 
@@ -45,6 +89,7 @@ def moveChecker(frame, checker, space):
     del spaceContents[checker.getSpace()]
 
     if space:
+        # checker is being moved, not deleted
         spaceContents[space] = checker
         checker.setSpace(space)
 
@@ -52,7 +97,7 @@ def moveChecker(frame, checker, space):
         team = checker.getTeam()
 
         if (row == 8 and team == 1) or (row == 1 and team == 2):
-            checker.setIsKing(True)
+                checker.setIsKing(True)
 
 def buttonCreated(frame, button):
     spaceContents = frame.getSpaceContents()
@@ -88,10 +133,11 @@ def spaceClicked(frame, val):
         frame.setCurChecker(0)
         print("The previously selected checker is now deselected.")
     else:
+        curSpace = curChecker.getSpace()
         r = val[0]
         c = val[1]
-        cur_r = curChecker.getSpace()[0]
-        cur_c = curChecker.getSpace()[1]
+        cur_r = curSpace[0]
+        cur_c = curSpace[1]
 
         if not checkSpace(frame, val):
             #there is not a checker currently occupying the destination
@@ -99,9 +145,7 @@ def spaceClicked(frame, val):
             if not abs(c - cur_c) in [3, 5, 7]:
                 #valid column move
                 
-                if curChecker.getIsKing() or \
-                   (((r - cur_r) >= 0 and (turn == 1)) or \
-                   ((r - cur_r) <= 0 and (turn == 2))):
+                if curChecker.getIsKing() or isCorrectDirection(curSpace, val, turn):
                     #valid row move
 
                     if abs(r - cur_r) == abs(c - cur_c):
@@ -126,35 +170,41 @@ def spaceClicked(frame, val):
                                 #nextTurn(frame)
                                 moveChecker(frame, jumped, 0)
                                 moveChecker(frame, curChecker, val)
-                                new_frame = updateBoard(frame)
 
-                                possibleJump = False
+                                if checkWin(frame):
+                                    endGame(frame)
+                                else:
+                                    #check all four possible jump spaces around
+                                    #the checker here, if none are open with an
+                                    #opposing checker between, then in the else
+                                    #statement, do nextTurn(frame)
 
-                                #check all four possible jump spaces around
-                                #the checker here, if none are open with an
-                                #opposing checker between, then in the else
-                                #statement, do nextTurn(frame)
+                                    possibleJump = False
 
-                                for i in range(-1, 2, 2):
-                                    for x in range(-1, 2, 2):
-                                        test = (val[0] + 2 * x, val[1] + 2 * i)
+                                    for i in range(-1, 2, 2):
+                                        for x in range(-1, 2, 2):
+                                            test = (r + 2 * x, c + 2 * i)
+                                            print("Testing:", test)
+                                            
+                                            if checkSpace(frame, test) == 0 and isValidSpace(test) and \
+                                            (curChecker.getIsKing() or isCorrectDirection(val, test, turn)):
+                                                midpoint = (int((r + test[0]) / 2),
+                                                            int((c + test[1]) / 2))
 
-                                        if not checkSpace(new_frame, test):
-                                            midpoint = ((val[0] + test[0]) / 2,
-                                                        (val[1] + test[1]) / 2)
+                                                occupying_mid = checkSpace(frame, midpoint)
 
-                                            occupying_mid = checkSpace \
-                                                          (new_frame, midpoint)
+                                                if occupying_mid and \
+                                                   not occupying_mid.getTeam() == turn:
+                                                    possibleJump = True
+                                                    print("Midpoint found:", midpoint)
 
-                                            if occupying_mid and \
-                                               not occupying_mid.getTeam() \
-                                               == turn:
-                                                possibleJump = True
+                                    #still bugs, but above logic works - bang bang
+                                                    
+                                    if not possibleJump:
+                                        print("No possible jump")
+                                        nextTurn(frame)
 
-                                #still bugs, but above logic works - bang bang
-                                                
-                                if not possibleJump:
-                                    nextTurn(new_frame)
+                                    updateBoard(frame)
 
                     else:
                         invalidMoveMessage(3)
