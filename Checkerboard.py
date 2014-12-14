@@ -35,9 +35,7 @@ class Checkerboard(Frame):
         self.__redNameEntryVar.set("Red Player")
         self.__redNameEntry = Entry(self.__nameFrame, \
                                     width = 15,
-                                    textvariable = self.__redNameEntryVar)
-#        self.__redNameEntry.insert(0, "Red Player")
-        
+                                    textvariable = self.__redNameEntryVar)        
         self.__whitePlayerLabel = Label(self.__nameFrame, \
                                         text = "White Team Player Name:")
         self.__whiteNameEntryVar = StringVar()
@@ -45,7 +43,6 @@ class Checkerboard(Frame):
         self.__whiteNameEntry = Entry(self.__nameFrame, \
                                       width = 15,
                                       textvariable = self.__whiteNameEntryVar)
-#        self.__whiteNameEntry.insert(0, "White Player")
 
         self.__turnLabel = Label(self.__turnFrame, \
                                  text = "Your Turn:")
@@ -129,6 +126,9 @@ class Checkerboard(Frame):
     def getTurn(self):
         return self.__turn
 
+    #Narrative: Changes the turn value to given argument
+    #Precondition: Must be called, takes turn as argument (1 or 2)
+    #Postcondition: Sets turn to the given value
     def setTurn(self, turn):
         self.__turn = turn
 
@@ -138,6 +138,9 @@ class Checkerboard(Frame):
     def getCurChecker(self):
         return self.__curChecker
 
+    #Narrative: Changes the currently assigned checker
+    #Precondition: Must be called, takes checker or 0 as an argument
+    #Postcondition: Sets currently assigned checker to new checker or 0 (none)
     def setCurChecker(self, curChecker):
         self.__curChecker = curChecker
 
@@ -147,15 +150,15 @@ class Checkerboard(Frame):
     def getSpaceContents(self):
         return self.__spaceContents
 
+    #Narrative: Changes dictionary referring to spaces and their contents
+    #Precondition: Must be called, takes spaceContents as argument (dictionary)
+    #Postcondition: Changes the value of dictionary containing space contents
     def setSpaceContents(self, spaceContents):
         self.__spaceContents = spaceContents
 
-    def updateTurnValue(self):
-        if self.__turn == 1:
-            self.__turnVar.set(self.__redNameEntryVar.get())
-        else:
-            self.__turnVar.set(self.__whiteNameEntryVar.get())
-
+    #Narrative: Updates label to reflect the move previously made
+    #Precondition: Must be called, takes string value message as argument
+    #Postcondition: Sets label to given message argument
     def updateAnalysisValue(self, message):
         self.__analysisValue.set(message)
 
@@ -179,9 +182,19 @@ class Checkerboard(Frame):
 
         self.__curChecker = 0
 
+    #Narrative: Sends the space value to evaluations module to evaluate how event
+    #           should be handled within the rules of checkers
+    #Precondition: Button must be pressed on the checkerboard
+    #Postcondition: Passes space as argument to find how to proceed
     def __activated(self, space):
         checkersEvaluation.spaceClicked(self, space)
-        
+
+    #Narrative: Gets corresponding image reference for a space's conditions
+    #Precondition: Must be called and given the space as argument, which is
+    #              a tuple of format (row, column)
+    #Postcondition: Returns a string value that can be used in the dict of image
+    #               files to reference the correct image based on conditions
+    #               at that space
     def __getImageFile(self, space):
         r = space[0]
         c = space[1]
@@ -213,7 +226,11 @@ class Checkerboard(Frame):
                     photoFile += "blackBlank"
 
         return photoFile
-        
+
+    #Narrative: Updates images on the checkerboard to refleect changes
+    #Precondition: Must be called
+    #Postcondition: Gets correct image name for given conditions in each space
+    #               then changes the button's image
     def updateBoard(self):
         for i in range(64):
             r = (i // 8) + 1
