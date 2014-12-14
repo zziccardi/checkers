@@ -2,9 +2,14 @@
 # CS110 A52, A53, A53, and A53
 # Project: main
 
-import Checkerboard, Checker, checkersEvaluation
+from Checkerboard import *
+from Checker import *
 
-def createCheckers(board):
+#Narrative: Creates a dict of checkers in default positions for start of game
+#Precondition: Must be called
+#Postcondition: Returns a dictionary containing 24 checkers, 12 on each team
+def createCheckers():
+    checkerDict = {}
     listRows = [1, 2, 3, 6, 7, 8]
 
     # Creating 24 checkers
@@ -20,13 +25,12 @@ def createCheckers(board):
 
         # Creates the checker with the calculate space value, team 1 for the
         # first 12 checkers and team 2 for the final 12
-        board.checkerCreated(Checker.Checker(False, \
-                                                         space, (i // 12) + 1))
+        checkerDict[space] = Checker(False, space, (i // 12) + 1)
+
+    return checkerDict
 
 def main():
-    board = Checkerboard.Checkerboard(1, 0, {})
-    createCheckers(board)
-    board.updateBoard()
+    board = Checkerboard(1, createCheckers())
     board.updateAnalysisValue("Let the game begin!")
     board.mainloop()
 

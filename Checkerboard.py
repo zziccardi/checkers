@@ -6,7 +6,7 @@ from tkinter import *
 import checkersEvaluation
 
 class Checkerboard(Frame):
-    def __init__(self, turn, checker, spaceContents, redName="", whiteName=""):
+    def __init__(self, turn, spaceContents):
         Frame.__init__(self)
         self.master.title("Checkerboard")
         self.grid()
@@ -100,15 +100,15 @@ class Checkerboard(Frame):
         #Team 2 can move north
         self.__turn = turn
 
-        #Reference to the checker currently chosen by the player whose turn it
-        #currently is, 0 if no checker is currently chosen
-        self.__curChecker = checker
-
         #Will hold the contents of each space by using the space as a key, with
         #data type being a tuple of integer, corresponding to (row, column).
         # Value of each key will contain a reference to the checker occupying
         #the space if it exists
         self.__spaceContents = spaceContents
+
+        #Reference to the checker currently chosen by the player whose turn it
+        #currently is, 0 if no checker is currently chosen
+        self.__curChecker = 0
 
         for i in range(64):
             r = (i // 8) + 1
@@ -123,18 +123,27 @@ class Checkerboard(Frame):
         
             self.__buttons[space].grid(row=r, column=c)
 
+    #Narrative: Retrieves the value of the current turn
+    #Precondition: Must be called
+    #Postcondition: Returns integer value of turn, 1 or 2
     def getTurn(self):
         return self.__turn
 
     def setTurn(self, turn):
         self.__turn = turn
 
+    #Narrative: Retrieves the reference to the currently selected checker
+    #Precondition: Must be called
+    #Postcondition: Returns reference to the checker, 0 if none
     def getCurChecker(self):
         return self.__curChecker
 
     def setCurChecker(self, curChecker):
         self.__curChecker = curChecker
 
+    #Narrative: Retrieves the dictionary containing all spaces
+    #Precondition: Must be called
+    #Postcondition: Returns integer value of turn, 1 or 2
     def getSpaceContents(self):
         return self.__spaceContents
 
