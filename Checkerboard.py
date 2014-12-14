@@ -31,21 +31,28 @@ class Checkerboard(Frame):
         # Submit buttons
         self.__redPlayerLabel = Label(self.__nameFrame, \
                                       text = "Red Team Player Name:")
+        self.__redNameEntryVar = StringVar()
+        self.__redNameEntryVar.set("Red Player")
         self.__redNameEntry = Entry(self.__nameFrame, \
-                                    width = 15)
-        self.__redNameEntry.insert(0, "Red Player")
+                                    width = 15,
+                                    textvariable = self.__redNameEntryVar)
+#        self.__redNameEntry.insert(0, "Red Player")
         
         self.__whitePlayerLabel = Label(self.__nameFrame, \
                                         text = "White Team Player Name:")
+        self.__whiteNameEntryVar = StringVar()
+        self.__whiteNameEntryVar.set("White Player")
         self.__whiteNameEntry = Entry(self.__nameFrame, \
-                                      width = 15)
-        self.__whiteNameEntry.insert(0, "White Player")
+                                      width = 15,
+                                      textvariable = self.__whiteNameEntryVar)
+#        self.__whiteNameEntry.insert(0, "White Player")
 
         self.__turnLabel = Label(self.__turnFrame, \
                                  text = "Your Turn:")
-        
+        self.__turnVar = StringVar()
+        self.__turnVar.set(self.__redNameEntryVar.get())
         self.__displayTurn = Label(self.__turnFrame, \
-                                   text = self.__redNameEntry.get())
+                                   textvariable = self.__turnVar)
         
 
         # Updating label that tells user if their move was valid or invalid
@@ -54,23 +61,22 @@ class Checkerboard(Frame):
         '''Code to make the move analysis label change with each move'''
         self.__analysisValue = StringVar()
         self.__displayAnalysis = Label(self.__turnFrame, \
-                                       textvariable = self.__analysisValue, \
-                                       justify = LEFT)
+                                       textvariable = self.__analysisValue)
 
         # Organize titleFrame
-        self.__startGameLabel.grid(   column = 0, row = 0)
+        self.__startGameLabel.grid(   column = 1, row = 1)
 
         # Organize nameFrame
-        self.__redPlayerLabel.grid(   column = 0, row = 1)
-        self.__redNameEntry.grid(     column = 1, row = 1)
-        self.__whitePlayerLabel.grid( column = 0, row = 2)
-        self.__whiteNameEntry.grid(   column = 1, row = 2)
+        self.__redPlayerLabel.grid(   column = 1, row = 2)
+        self.__redNameEntry.grid(     column = 2, row = 2)
+        self.__whitePlayerLabel.grid( column = 1, row = 3)
+        self.__whiteNameEntry.grid(   column = 2, row = 3)
 
         # Organize turnFrame
-        self.__turnLabel.grid(        column = 0, row = 0)
-        self.__displayTurn.grid(      column = 1, row = 0)
-        self.__moveAnalysisLabel.grid(column = 0, row = 1)
-        self.__displayAnalysis.grid(  column = 1, row = 1)
+        self.__turnLabel.grid(        column = 1, row = 1)
+        self.__displayTurn.grid(      column = 2, row = 1)
+        self.__moveAnalysisLabel.grid(column = 1, row = 2)
+        self.__displayAnalysis.grid(  column = 2, row = 2)
 
         self.__images = {}
         self.__images["red"] = PhotoImage(file = "redChecker.gif")
@@ -137,9 +143,9 @@ class Checkerboard(Frame):
 
     def updateTurnValue(self):
         if self.__turn == 1:
-            self.__turnLabel = self.__redNameEntry.get()
+            self.__turnVar.set(self.__redNameEntryVar.get())
         else:
-            self.__turnLabel = self.__whiteNameEntry.get()
+            self.__turnVar.set(self.__whiteNameEntryVar.get())
 
     def updateAnalysisValue(self, message):
         self.__analysisValue.set(message)
