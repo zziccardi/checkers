@@ -150,9 +150,28 @@ class Checkerboard(Frame):
     def updateAnalysisValue(self, message):
         self.__analysisValue.set(message)
 
+    #Narrative: Adds a checker to the board
+    #Precondition: Takes a reference to the checker as an argument
+    #Postcondition: Adds checker to the dictionary containing all checkers
+    def checkerCreated(self, checker):
+        self.__spaceContents[checker.getSpace()] = checker
+
+    #Narrative: Changes the turn values and resets curChecherk
+    #Precondition: Reference to the checker board must be passed as an argument
+    #Postcondition: Toggles turn attribute on board, resets curChecker and updates
+    #               label to reflect changes
+    def nextTurn(self):
+        if self.__turn == 1:
+            self.__turn = 2
+            self.__turnVar.set(self.__whiteNameEntryVar.get())
+        else:
+            self.__turn = 1
+            self.__turnVar.set(self.__redNameEntryVar.get())
+
+        self.__curChecker = 0
+
     def __activated(self, space):
         checkersEvaluation.spaceClicked(self, space)
-        print(space)
         
     def __getImageFile(self, space):
         r = space[0]
