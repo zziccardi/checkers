@@ -10,6 +10,17 @@ class Checkerboard(Frame):
         Frame.__init__(self)
         self.master.title("Checkerboard")
         self.grid()
+                
+        #Team 1 can move south
+        #Team 2 can move north
+        #Holds which team's turn it currently is
+        self.__turn = turn
+
+        #Will hold the contents of each space by using the space as a key, with
+        #data type being a tuple of integer, corresponding to (row, column).
+        # Value of each key will contain a reference to the checker occupying
+        #the space if it exists
+        self.__spaceContents = spaceContents
 
         # New Frame for menu title
         self.__titleFrame = Frame(self)
@@ -47,7 +58,10 @@ class Checkerboard(Frame):
         self.__turnLabel = Label(self.__turnFrame, \
                                  text = "Your Turn:")
         self.__turnVar = StringVar()
-        self.__turnVar.set(self.__redNameEntryVar.get())
+        if self.__turn == 1:
+            self.__turnVar.set(self.__redNameEntryVar.get())
+        else:
+            self.__turnVar.set(self.__whiteNameEntryVar.get())
         self.__displayTurn = Label(self.__turnFrame, \
                                    textvariable = self.__turnVar)
         
@@ -90,17 +104,6 @@ class Checkerboard(Frame):
             "blackBlank" : PhotoImage(file = "blackBlank.gif"),
             "whiteBlank" : PhotoImage(file = "whiteBlank.gif")
                         }
-        
-        #Team 1 can move south
-        #Team 2 can move north
-        #Holds which team's turn it currently is
-        self.__turn = turn
-
-        #Will hold the contents of each space by using the space as a key, with
-        #data type being a tuple of integer, corresponding to (row, column).
-        # Value of each key will contain a reference to the checker occupying
-        #the space if it exists
-        self.__spaceContents = spaceContents
 
         #Reference to the checker currently chosen by the player whose turn it
         #currently is, 0 if no checker is currently chosen
