@@ -170,8 +170,8 @@ def spaceClicked(board, val):
                                         for x in range(-1, 2, 2):
                                             test = (r + 2 * x, c + 2 * i)
                                             
-                                            if checkSpace(board, test) == 0 and \
-                                               isValidSpace(test) and \
+                                            if checkSpace(board, test) == 0 \
+                                               and isValidSpace(test) and \
                                             (curChecker.getIsKing() or \
                                              isCorrectDirection(val, test, \
                                                                 turn)):
