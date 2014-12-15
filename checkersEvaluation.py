@@ -45,6 +45,8 @@ def checkWin(board):
     teamOneOccurance = False
     teamTwoOccurance = False
 
+    #while loop goes until all spaces have been checked or a piece has been
+    #found of each team
     while (not (teamOneOccurance and teamTwoOccurance)) and ctr <= 64:
         space = (row, column)
         checker = checkSpace(board, space)
@@ -58,7 +60,10 @@ def checkWin(board):
         row = ctr % 8 + 1
         column = ctr // 8 + 1
         ctr += 1
-    
+
+    #there will always be at least one team present on the board at all times
+    #so this check will return True (indicating a team has won) when one of the
+    #teams does not have an occurance on the board
     return teamOneOccurance != teamTwoOccurance
 
 #Narrative: Ends the game and displays a messagebox
@@ -79,8 +84,9 @@ def moveChecker(board, checker, space):
     
     del spaceContents[checker.getSpace()]
 
+    #when space is 0, a checker is being deleted. this condition ensures
+    #that a checker is being moved to the given space
     if space:
-        # checker is being moved, not deleted
         spaceContents[space] = checker
         checker.setSpace(space)
 
@@ -93,87 +99,118 @@ def moveChecker(board, checker, space):
 #Narrative: Called whenever a space is clicked, does all evaluations necessary
 #           to determine whether the attempted move is valid or not
 #Precondition: Takes in reference to the board, and val which is a tuple value
-#              of 2 integers, (row, col)
+#              of 2 integers, (row, col) indicating the destination space
 #Postcondition: Makes the move if it is valid, invalid move message if not
-def spaceClicked(board, val):
+def spaceClicked(board, dest):
     curChecker = board.getCurChecker()
     turn = board.getTurn()
 
-    # If a checker is not currently selected by the player:
+    #If a checker is not currently selected by the player:
     if not curChecker:
-        spaceContent = checkSpace(board, val)
+        spaceContent = checkSpace(board, dest)
         
         if spaceContent:
-            # If the checker on the clicked space is the same team as the player
-            # whose turn it is, assign it to the player
+            #If the checker on the clicked space is the same team as the player
+            #whose turn it is, assign it to the player
             if spaceContent.getTeam() == turn:
                 board.setCurChecker(spaceContent)
                 board.updateAnalysisValue("A checker has been selected.")
                 board.updateBoard()
-                # Make curChecker light up, either change image or highlight
-                # button
 
-    # If a checker has been selected, but a move hasn't yet been made.
-    elif curChecker == checkSpace(board, val):
+    #If a checker has been selected, and the user is clicking the space of
+    #that checker, unassign it:
+    elif curChecker == checkSpace(board, dest):
         board.setCurChecker(0)
         board.updateAnalysisValue("The checker has been deselected.")
         board.updateBoard()
+
+    #Otherwise, the user is trying to make a move with their checker:
     else:
         curSpace = curChecker.getSpace()
-        r = val[0]
-        c = val[1]
+        r = dest[0]
+        c = dest[1]
         cur_r = curSpace[0]
         cur_c = curSpace[1]
 
-        if not checkSpace(board, val):
-            #there is not a checker currently occupying the destination
-            
-            if not abs(c - cur_c) in [3, 5, 7]:
-                #valid column move
-                
-                if curChecker.getIsKing() or isCorrectDirection(curSpace, \
-                                                                val, turn):
-                    #valid row move
+        #If there is a checker on the clicked space, we can't do anything.
+        #Check if it is empty first before doing anything:
+        if checkSpace(board, dest) == 0:
 
+            #Only moves that shift the column of the checker by 1 or 2 spaces
+            #are valid:
+            if abs(c - cur_c) in [1, 2]:
+
+                #You can only move in one direction unless you are a king, so
+                #make that check before advancing in evaluation as well:
+                if curChecker.getIsKing() or isCorrectDirection(curSpace, \
+                                                                dest, turn):
+
+                    #Only moves that advance by an equal amount of columns and
+                    #rows are valid. A move of 2 rows and 1 column is not
+                    #permitted. Make that check here:
                     if abs(r - cur_r) == abs(c - cur_c):
-                        #valid move
+
+                        #If the user is trying to advance forward rather than
+                        #make a jump over another checker, it is by 1 row:
                         if abs(r - cur_r) == 1:
-                            moveChecker(board, curChecker, val)
+                            moveChecker(board, curChecker, dest)
                             board.updateAnalysisValue("The checker has " + \
                                                       "advanced one space.")
                             board.nextTurn()
                             board.updateBoard()
 
+                        #Otherwise they are trying to move by two rows, which
+                        #is a jump. We must check that all jump conditions are
+                        #properly met:
                         else:
+                            #space will be the point inbetween the current
+                            #location and destination, to see what is on it
                             space = ((r + cur_r) / 2, (c + cur_c) / 2)
+
+                            #jumped is a reference to whatever is on the point
+                            #between the location and destination
                             jumped = checkSpace(board, space)
 
-                            if not jumped:
+                            #You can only jump over an enemy, so if it is
+                            #empty then do not do anything
+                            if jumped == 0:
                                 board.updateAnalysisValue("Invalid move!")
+
+                            #Can't jump over your own checker
                             elif jumped.getTeam() == turn:
                                 board.updateAnalysisValue("Invalid move!")
+
+                            #Otherwise it is a valid jump
                             else:
                                 #nextTurn(board)
                                 moveChecker(board, jumped, 0)
-                                moveChecker(board, curChecker, val)
+                                moveChecker(board, curChecker, dest)
 
+                                #Check for a win, since a checker has been
+                                #removed from the board
                                 if checkWin(board):
                                     endGame(board)
+
+                                #No one has won, so check for a double jump
                                 else:
                                     #check all four possible jump spaces around
                                     #the checker here, if none are open with an
                                     #opposing checker between, then in the else
-                                    #statement, do nextTurn(board)
+                                    #statement, do next turn
                                     possibleJump = False
 
-                                    for i in range(-1, 2, 2):
-                                        for x in range(-1, 2, 2):
+                                    #Loop through each combination of +/-2 to
+                                    #the row and column values
+                                    for i in [-1, 1]:
+                                        for x in [-1, 1]:
+                                            #test contains the possible open
+                                            #destination point
                                             test = (r + 2 * x, c + 2 * i)
                                             
                                             if checkSpace(board, test) == 0 \
                                                and isValidSpace(test) and \
                                             (curChecker.getIsKing() or \
-                                             isCorrectDirection(val, test, \
+                                             isCorrectDirection(dest, test, \
                                                                 turn)):
                                                 midpoint = (int((r + test[0]) \
                                                                 / 2),
@@ -185,8 +222,8 @@ def spaceClicked(board, val):
                                                                  midpoint)
 
                                                 if occupying_mid and \
-                                                   not occupying_mid.getTeam() \
-                                                   == turn:
+                                                   occupying_mid.getTeam() \
+                                                   != turn:
                                                     possibleJump = True
                                                     
                                     if not possibleJump:
@@ -199,6 +236,8 @@ def spaceClicked(board, val):
 
                                     board.updateBoard()
 
+                    #When any of the above checks do not pass, let the user
+                    #know that it is an invalid move:
                     else:
                         board.updateAnalysisValue("Invalid move!")
                 else:
