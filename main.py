@@ -5,8 +5,9 @@
 from Checkerboard import *
 from Checker import *
 
-#Narrative: Creates a dict of checkers in default positions for start of game
-#Precondition: Must be called
+#Narrative: Creates a dictionary of checkers in the default positions for the
+#           start of the game
+#Precondition: Must be called within main()
 #Postcondition: Returns a dictionary containing 24 checkers, 12 on each team
 def createCheckers():
     checkerDict = {}
@@ -26,11 +27,13 @@ def createCheckers():
         # Creates the checker with the calculate space value, team 1 for the
         # first 12 checkers and team 2 for the final 12
         checkerDict[space] = Checker(False, space, (i // 12) + 1)
+                             # (isKing, space, team)
 
     return checkerDict
 
 def main():
     board = Checkerboard(1, createCheckers())
+            # (turn, spaceContents)
     board.updateAnalysisValue("Let the game begin!")
     board.mainloop()
 
