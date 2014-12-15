@@ -75,26 +75,25 @@ class Checkerboard(Frame):
         self.__moveAnalysisLabel.grid(column = 1, row = 2)
         self.__displayAnalysis.grid(  column = 2, row = 2)
 
-        self.__images = {}
-        self.__images["red"] = PhotoImage(file = "redChecker.gif")
-        self.__images["redKing"] = PhotoImage(file = "redCheckerKing.gif")
-        self.__images["redHighlighted"] = \
-                            PhotoImage(file = "redCheckerHighlighted.gif")
-        self.__images["redKingHighlighted"] = \
-                            PhotoImage(file = "redCheckerKingHighlighted.gif")
-        self.__images["white"] = PhotoImage(file = "whiteChecker.gif")
-        self.__images["whiteKing"] = PhotoImage(file = "whiteCheckerKing.gif")
-        self.__images["whiteHighlighted"] = \
-                            PhotoImage(file = "whiteCheckerHighlighted.gif") 
-        self.__images["whiteKingHighlighted"] = \
-                            PhotoImage(file = "whiteCheckerKingHighlighted.gif")
-        self.__images["blackBlank"] = PhotoImage(file = "blackBlank.gif")
-        self.__images["whiteBlank"] = PhotoImage(file = "whiteBlank.gif")
-
-        self.__buttons = {}
-
+        self.__images = {
+            "red" : PhotoImage(file = "redChecker.gif"),
+            "redKing" : PhotoImage(file = "redCheckerKing.gif"),
+            "redHighlighted" : PhotoImage(file = "redCheckerHighlighted.gif"),
+            "redKingHighlighted" : PhotoImage(file = \
+                                            "redCheckerKingHighlighted.gif"),
+            "white" : PhotoImage(file = "whiteChecker.gif"),
+            "whiteKing" : PhotoImage(file = "whiteCheckerKing.gif"),
+            "whiteHighlighted" : PhotoImage(file = \
+                                            "whiteCheckerHighlighted.gif"),
+            "whiteKingHighlighted" : PhotoImage(file = \
+                                            "whiteCheckerKingHighlighted.gif"),
+            "blackBlank" : PhotoImage(file = "blackBlank.gif"),
+            "whiteBlank" : PhotoImage(file = "whiteBlank.gif")
+                        }
+        
         #Team 1 can move south
         #Team 2 can move north
+        #Holds which team's turn it currently is
         self.__turn = turn
 
         #Will hold the contents of each space by using the space as a key, with
@@ -107,6 +106,8 @@ class Checkerboard(Frame):
         #currently is, 0 if no checker is currently chosen
         self.__curChecker = 0
 
+        self.__buttons = {}
+
         for i in range(64):
             r = (i // 8) + 1
             c = (i % 8) + 1
@@ -114,9 +115,24 @@ class Checkerboard(Frame):
 
             photoFile = self.__getImageFile(space)
 
+            #lambda
+            #
+            #info from: http://stackoverflow.com/questions/
+            #           890128/python-lambda-why
+            #
+            #description: allows us to pass the space variable into the
+            #             callback function for the button
+            #
+            #             the lambda command's general use is to replicate a
+            #             function. an example from the website referenced
+            #             sums it up well:
+            #               > f = lambda x: x + 1
+            #               > f(3)
+            #               4
             self.__buttons[space] = Button(self, command=lambda widget=space: \
                                    self.__activated(widget), \
-                                   image = self.__images[photoFile])
+                                   image = self.__images[photoFile],
+                                   activebackground = "black")
         
             self.__buttons[space].grid(row=r, column=c)
 
